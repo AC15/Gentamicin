@@ -1,4 +1,4 @@
-<?php require "header.html" ?>
+<?php require "header.php" ?>
 
     <div class="container">
         <h1>About Gentamicin</h1>

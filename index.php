@@ -1,4 +1,7 @@
-<?php require "header.html" ?>
+<?php
+require "header.php";
+$Session->isUserLoggedIn();
+?>
 
 <div class="container">
     <h1>Current Gentamicin Patients</h1>

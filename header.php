@@ -33,7 +33,12 @@
                 <a class="nav-link" href="patient.php">Patient (for testing)</a>
             </li>
         </ul>
-        <form class="form-inline  my-lg-0 mr-2">
+<?php
+require "lib/Session.php";
+$Session = new Session();
+
+if ($Session->getLoggedIn()) {
+    echo '<form class="form-inline my-lg-0 mr-2">
             <div class="input-group">
                 <input type="text" id="search" class="form-control" placeholder="Search by #CHI">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
@@ -41,8 +46,14 @@
                 </button>
             </div>
         </form>
-        <a href="login.php" class="btn btn-outline-light my-2 my-sm-0" role="button">
+        <a href="logout.php" class="btn btn-outline-light my-2 my-sm-0" role="button">
+            <span class="fa fa-sign-out"></span> Logout
+        </a>';
+} else {
+    echo '<a href="login.php" class="btn btn-outline-light my-2 my-sm-0" role="button">
             <span class="fa fa-sign-in"></span> Login
-        </a>
+        </a>';
+}
+?>
     </div>
 </nav>

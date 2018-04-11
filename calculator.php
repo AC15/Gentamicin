@@ -1,7 +1,7 @@
-<?php require "header.html" ?>
+<?php require "header.php" ?>
 
-    <div class="container">
-        <form class="col-md-6 offset-md-3" id="needs-validation" onsubmit="event.preventDefault(); dose();" novalidate>
+    <div class="container col-md-6 offset-md-3">
+        <form id="needs-validation" onsubmit="event.preventDefault(); dose();" novalidate>
             <h1>Gentamicin Calculator</h1>
             <div class="form-group">
                 <legend class="col-form-label">Sex</legend>
@@ -36,6 +36,7 @@
                 <input type="number" class="form-control" min="20" id="plasma" name="plasma" placeholder="Plasma Creatinine Level (μmol/l)" required>
                 <div class="invalid-feedback">Please provide a plasma creatinine level of at least 20.</div>
             </div>
+            <button type="submit" class="btn btn-primary">Calculate</button>
 
             <div class="row">
                 <div class="col-md">
@@ -51,10 +52,10 @@
                     <h3 id="creatinineClearance">0</h3>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Calculate</button>
         </form>
     </div>
 
     <script src="js/formChecker.js"></script>
     <script src="js/dosageCalculation.js"></script>
+
 <?php require "footer.html" ?>
