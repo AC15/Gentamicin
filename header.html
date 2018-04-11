@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <title>Gentamicin App</title>
 </head>
@@ -32,12 +33,16 @@
                 <a class="nav-link" href="patient.php">Patient (for testing)</a>
             </li>
         </ul>
+        <form class="form-inline  my-lg-0 mr-2">
+            <div class="input-group">
+                <input type="text" id="search" class="form-control" placeholder="Search by #CHI">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+                    <span class="fa fa-search"></span>
+                </button>
+            </div>
+        </form>
         <a href="login.php" class="btn btn-outline-light my-2 my-sm-0" role="button">
-            <span class="fa fa-user"></span> Login
+            <span class="fa fa-sign-in"></span> Login
         </a>
-        <!--<form class="form-inline my-2 my-lg-0">-->
-            <!--<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">-->
-            <!--<button class="btn btn-primary my-2 my-sm-0" type="submit">Login</button>-->
-        <!--</form>-->
     </div>
 </nav>

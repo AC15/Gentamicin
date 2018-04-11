@@ -2,7 +2,7 @@
 
     <div class="container">
         <h1>Gentamicin Information</h1>
-        <table class="table">
+        <table class="table table-responsive table-sm">
             <thead>
             <tr>
                 <th scope="col">#CHI</th>
@@ -10,7 +10,7 @@
                 <th scope="col">Date of Birth</th>
                 <th scope="col">Age</th>
                 <th scope="col">Weight</th>
-                <th scope="col">Creatine</th>
+                <th scope="col">Creatinine</th>
                 <th scope="col">Sex</th>
                 <th scope="col">Height</th>
             </tr>
@@ -32,7 +32,7 @@
         <br>
 
         <h3>Serum Gentamicin Levels</h3>
-        <table class="table">
+        <table class="table table-responsive table-sm">
             <thead>
             <tr>
                 <th scope="col">Blood Test Due</th>
@@ -60,7 +60,7 @@
         <br>
 
         <h3>Next Dosage</h3>
-        <table class="table">
+        <table class="table table-responsive table-sm">
             <thead>
             <tr>
                 <th scope="col">Next Dosage</th>
@@ -88,7 +88,7 @@
         <p>Predicted Frequency: 24 hourly</p>
         <p>Expected Stop Date: 16/09/2018</p>
 
-        <table class="table table-sm">
+        <table class="table table-responsive table-sm">
             <thead>
             <tr>
                 <th scope="col">Date Due</th>

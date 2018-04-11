@@ -3,7 +3,7 @@
 <div class="container">
     <h1>Current Gentamicin Patients</h1>
 
-    <table class="table">
+    <table class="table table-responsive table-sm">
         <thead>
         <tr>
             <th scope="col">#CHI</th>
@@ -70,7 +70,7 @@
                     <p>Predicted Frequency: 24 hourly</p>
                     <p>Expected Stop Date: 16/09/2018</p>
 
-                    <table class="table table-sm">
+                    <table class="table table-responsive table-sm">
                         <thead>
                         <tr>
                             <th scope="col">Date Due</th>

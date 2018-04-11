@@ -44,11 +44,11 @@
                 </div>
                 <div class="col-md">
                     <legend class="col-form-label">Hourly Rate:</legend>
-                    <h3 id="hourlyRate"></h3>
+                    <h3 id="hourlyRate">0hrs</h3>
                 </div>
                 <div class="col-md">
                     <legend class="col-form-label">Creatinine Clearance:</legend>
-                    <h3 id="creatinineClearance"></h3>
+                    <h3 id="creatinineClearance">0</h3>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Calculate</button>

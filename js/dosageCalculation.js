@@ -50,12 +50,12 @@ function dose() {
     //document.getElementById("result").innerHTML = a_creat_clearance;
 
     document.getElementById("result").innerHTML = dose + "mg";
-    document.getElementById("hourlyRate").innerHTML = "Every " + hourly_rate + "hrs";
+    document.getElementById("hourlyRate").innerHTML = hourly_rate + "hrs";
     document.getElementById("creatinineClearance").innerHTML = creatinineClearance.toFixed(2).toString();
 
     function reset() {
         document.getElementById("result").innerHTML = "0mg";
-        document.getElementById("hourlyRate").innerHTML = "Every 0hrs";
+        document.getElementById("hourlyRate").innerHTML = "0hrs";
         document.getElementById("creatinineClearance").innerHTML = "CrCl = 0";
     }
 
