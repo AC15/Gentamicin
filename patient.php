@@ -55,7 +55,7 @@ $Session->isUserLoggedIn();
                 <td>R712</td>
                 <td>5</td>
                 <td>200mg</td>
-                <td><button type="button" class="btn btn-primary btn-sm">Print Prescriptions</button></td>
+                <td><a class="btn btn-primary btn-sm" href="prescription.php" role="button">Print Prescription</a></td>
             </tr>
             </tbody>
         </table>
@@ -91,7 +91,7 @@ $Session->isUserLoggedIn();
         <p>Predicted Frequency: 24 hourly</p>
         <p>Expected Stop Date: 16/09/2018</p>
 
-        <table class="table table-responsive table-sm">
+        <table class="table table-responsive table-sm table-striped">
             <thead>
             <tr>
                 <th scope="col">Date Due</th>
@@ -128,65 +128,8 @@ $Session->isUserLoggedIn();
             </tbody>
         </table>
 
+        <?php require "dosagegivenmodal.html"; ?>
 
-        <!-- Modal 2 -->
-        <div class="modal fade" id="dosageGivenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Previous Dosages (#1234567890 John Doe)</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" required>
-                                <div class="invalid-feedback">Please provide a date.</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="time">Time</label>
-                                <input type="text" class="form-control" id="time" name="time" placeholder="Time" required>
-                                <div class="invalid-feedback">Please provide a time.</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="dosage">Dosage</label>
-                                <input type="text" class="form-control" id="dosage" name="dosage" placeholder="Dosage" required>
-                                <div class="invalid-feedback">Please provide a dosage.</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="person">Ward</label>
-                                <select class="form-control" id="person" name="ward">
-                                    <option selected disabled hidden value="">Choose...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="person">Person</label>
-                                <select class="form-control" id="person" name="person">
-                                    <option selected disabled hidden value="">Choose...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 <?php require "footer.html" ?>

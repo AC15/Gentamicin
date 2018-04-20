@@ -1,6 +1,6 @@
 <?php require "header.php" ?>
 
-    <div class="container col-md-6 offset-md-3">
+    <div class="container col-lg-6 offset-lg-3">
         <form id="needs-validation" onsubmit="event.preventDefault(); dose();" novalidate>
             <h1>Gentamicin Calculator</h1>
             <div class="form-group">

@@ -14,7 +14,7 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="index.php">Gentamicin App</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -29,18 +29,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="about.php">About Gentamicin</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="patient.php">Patient (for testing)</a>
-            </li>
         </ul>
 <?php
 require "lib/Session.php";
 $Session = new Session();
 
 if ($Session->getLoggedIn()) {
-    echo '<form class="form-inline my-lg-0 mr-2">
+    echo '<form class="form-inline my-lg-0 mr-2" method="get" action="patient.php">
             <div class="input-group">
-                <input type="text" id="search" class="form-control" placeholder="Search by #CHI">
+                <input type="text" id="chi" class="form-control" name="chi" placeholder="Search by #CHI" required>
                 <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
                     <span class="fa fa-search"></span>
                 </button>
