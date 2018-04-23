@@ -1,16 +1,16 @@
 <?php
 require "lib/Database.php";
 
-$username = $_POST["username"];
+$staffID = $_POST["username"];
 $password = $_POST["password"];
 
 $Database = new Database();
 
-$row = $Database->select("SELECT CustomerID
-FROM albaUsers
-WHERE Email=?
-AND Password=?",
-    array("ss", $username, $password));
+$row = $Database->select("SELECT staffID
+FROM staff
+WHERE staffID=?
+AND staffPassword=?",
+    array("is", $staffID, $password));
 
 if ($row) {
     require "lib/Session.php";

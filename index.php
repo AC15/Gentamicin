@@ -1,6 +1,9 @@
 <?php
 require "header.php";
 $Session->isUserLoggedIn();
+
+require "lib/Database.php";
+$Database = new Database(); // create an instance of database
 ?>
 
 <div class="container">
@@ -19,43 +22,33 @@ $Session->isUserLoggedIn();
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row"><a href="patient.php?chi=1234567890">1234567890</a></th>
-            <td>John Doe</td>
-            <td>Due</td>
-            <td>15/09/2018</td>
-            <td>17:00</td>
-            <td>200mg</td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" data-chi="1" data-toggle="modal" data-target="#dosageGivenModal">Dosage Given</button>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row"><a href="patient.php?chi=1234567890">1234567890</a></th>
-            <td>Steven Doe</td>
-            <td>1h 39m</td>
-            <td>14/09/2018</td>
-            <td>17:05</td>
-            <td>150mg</td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" data-chi="2" data-toggle="modal" data-target="#dosageGivenModal">Dosage Given</button>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row"><a href="patient.php?chi=1234567890">1234567890</a></th>
-            <td>Jack Doe</td>
-            <td>2d 1h 39m</td>
-            <td>14/09/2018</td>
-            <td>17:05</td>
-            <td>160mg</td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" data-chi="3" data-toggle="modal" data-target="#dosageGivenModal">Dosage Given</button>
-            </td>
-        </tr>
+<?php
+$patientData = $Database->selectMany("SELECT patientID, patientFirstName, patientLastName
+FROM patientinfo", null);
+
+while ($row = $patientData->fetch_assoc()) {
+    echo '        <tr>
+            <th scope="row"><a href="patient.php?chi=' . $row["patientID"] . '">' . $row["patientID"] . '</a></th>
+            <td>' . $row["patientFirstName"] . ' ' . $row["patientLastName"] . '</td>
+            
+        </tr>';
+}
+?>
+<!--        <tr>-->
+<!--            <th scope="row"><a href="patient.php?chi=1234567890">1234567890</a></th>-->
+<!--            <td>Steven Doe</td>-->
+<!--            <td>1h 39m</td>-->
+<!--            <td>14/09/2018</td>-->
+<!--            <td>17:05</td>-->
+<!--            <td>150mg</td>-->
+<!--            <td>-->
+<!--                <button type="button" class="btn btn-primary btn-sm" data-chi="2" data-toggle="modal" data-target="#dosageGivenModal">Dosage Given</button>-->
+<!--            </td>-->
+<!--        </tr>-->
         </tbody>
     </table>
 
-    <?php require "dosagegivenmodal.html"; ?>
+    <?php require "dosagegivenmodal.php"; ?>
 </div>
 
 <script src="js/formChecker.js"></script>

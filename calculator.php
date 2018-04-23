@@ -21,8 +21,8 @@
                 <div class="invalid-feedback">Please provide an age, between 16 and 70.</div>
             </div>
             <div class="form-group">
-                <label for="weight">Actual Weight</label>
-                <input type="number" class="form-control" min="0" id="weight" name="weight" placeholder="Actual Weight" required>
+                <label for="weight">Actual Weight (kilograms)</label>
+                <input type="number" class="form-control" min="0" id="weight" name="weight" placeholder="Actual Weight (kilograms)" required>
                 <div class="invalid-feedback">Please provide a weight.</div>
             </div>
             <div class="form-group">

@@ -39,14 +39,15 @@ class Database {
     }
 
     public function getResult($param, $Stmt) {
-        $this->prepareArray($param, $Stmt);
+        if (!is_null($param)) { // where there are no parameters return
+            $this->prepareArray($param, $Stmt);
+        }
         $Stmt->execute();
 
         return $Stmt->get_result();
     }
 
-    public function prepareArray($param, $Stmt)
-    {
+    public function prepareArray($param, $Stmt) {
         $tmp = array();
         foreach ($param as $key => $value) $tmp[$key] = &$param[$key];
         call_user_func_array(array($Stmt, 'bind_param'), $tmp);

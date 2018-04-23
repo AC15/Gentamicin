@@ -37,7 +37,7 @@ $Session = new Session();
 if ($Session->getLoggedIn()) {
     echo '<form class="form-inline my-lg-0 mr-2" method="get" action="patient.php">
             <div class="input-group">
-                <input type="text" id="chi" class="form-control" name="chi" placeholder="Search by #CHI" required>
+                <input type="number" id="chi" class="form-control" name="chi" placeholder="Search by #CHI" required>
                 <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
                     <span class="fa fa-search"></span>
                 </button>

@@ -20,11 +20,6 @@
                         <div class="invalid-feedback">Please provide a time.</div>
                     </div>
                     <div class="form-group">
-                        <label for="dosage">Dosage</label>
-                        <input type="text" class="form-control" id="dosage" name="dosage" placeholder="Dosage" required>
-                        <div class="invalid-feedback">Please provide a dosage.</div>
-                    </div>
-                    <div class="form-group">
                         <label for="ward">Ward</label>
                         <select class="form-control" id="ward" name="ward" required>
                             <option selected disabled hidden value="">Choose...</option>
@@ -39,14 +34,20 @@
                         <label for="person">Person</label>
                         <select class="form-control" id="person" name="person" required>
                             <option selected disabled hidden value="">Choose...</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+<?php
+$doctors = $Database->selectMany("SELECT staffID, staffTitle, staffFirstName, staffLastName
+FROM staff",
+    null);
+
+while ($row = $doctors->fetch_assoc()) {
+    $id = $row["staffID"];
+    $name = $row["staffTitle"] . " " . $row["staffFirstName"] . " " . $row["staffLastName"];
+    echo '<option value="' . $id . '">' . $name . '</option>';
+}
+?>
                         </select>
                     </div>
-                    <input type="hidden" id="patientCHI" name="patientCHI" value=""/>
+                    <input type="hidden" id="patientCHI" name="patientCHI" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

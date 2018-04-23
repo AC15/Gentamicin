@@ -5,7 +5,7 @@
     <form method="post" action="loginsubmit.php" id="needs-validation" novalidate>
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+            <input type="number" class="form-control" id="username" name="username" placeholder="Username" required>
             <div class="invalid-feedback">Please provide a username.</div>
         </div>
         <div class="form-group">

@@ -6,7 +6,7 @@ function dose() {
     var weight = document.getElementById("weight").value; // Not required in HTML form, can use ideal body weight from age
     var plasmaCreatinine = document.getElementById("plasma").value;
 
-    var hourly_rate = 0;
+    var hourlyRate = 0;
     var dose = 0;
     var x = 0;
     var f = 0;
@@ -50,7 +50,7 @@ function dose() {
     //document.getElementById("result").innerHTML = a_creat_clearance;
 
     document.getElementById("result").innerHTML = dose + "mg";
-    document.getElementById("hourlyRate").innerHTML = hourly_rate + "hrs";
+    document.getElementById("hourlyRate").innerHTML = hourlyRate + "hrs";
     document.getElementById("creatinineClearance").innerHTML = creatinineClearance.toFixed(2).toString();
 
     function reset() {
@@ -86,8 +86,8 @@ function dose() {
         return true;
     }
 
-    function dosage(hourlyRate, dose1, dose2, dose3, dose4, dose5) {
-        hourly_rate = hourlyRate;
+    function dosage(hourly_rate, dose1, dose2, dose3, dose4, dose5) {
+        hourlyRate = hourly_rate;
 
         if (weight > 80) {
             dose = dose1;
