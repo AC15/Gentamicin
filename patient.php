@@ -14,7 +14,7 @@ WHERE patientID = ?",
 ?>
 
     <div class="container">
-        <h1>Gentamicin Information</h1>
+        <h1>Gentamicin Dose Administration</h1>
 <?php
 if (!$patientData) {
     echo '<div class="alert alert-danger" role="alert">
@@ -57,6 +57,22 @@ echo "          <td>" . $patientData["patientID"] . "</td>
         <br>
 
         <h3>Serum Gentamicin Levels</h3>
+<?php
+$bloodResults = $Database->selectMany("SELECT *
+FROM bloods
+WHERE patientID = ?",
+    array("i", $patientID));
+
+if (mysqli_num_rows($bloodResults) == 0) {
+    echo '<div class="alert alert-info" role="alert">
+              Input blood test results to calculate the gentamicin dosage.
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-chi="' . $patientID . '" data-target="#bloodTestResultsModal">Input Blood Test Results</button>';
+    require "bloodtestmodal.php";
+    require "footer.html";
+    exit(); // stops the php execution
+}
+?>
         <table class="table table-responsive table-sm" style="margin-bottom: 0">
             <thead>
             <tr>
@@ -68,26 +84,24 @@ echo "          <td>" . $patientData["patientID"] . "</td>
             </tr>
             </thead>
             <tbody>
-            <tr>
 <?php
-$bloodResults = $Database->selectMany("SELECT *
-FROM bloods
-WHERE patientID = ?",
-    array("i", $patientID));
-
 while ($row = $bloodResults->fetch_assoc()) {
-    echo '                <td>' . $row["patientBloodResultNumber"] . '</td>
+    echo '      <tr>
+                <td>' . $row["patientBloodResultNumber"] . '</td>
                 <td>' . $row["patientBloodTakenDate"] . '</td>
                 <td>' . $row["patientPlasmaCreatinine"] . '</td>
-    
-                <td><a class="btn btn-primary btn-sm" href="prescription.php" role="button">Print Prescription</a></td>';
+                
+                <td><form method="post" action="prescription.php">
+                    <button type="submit" class="btn btn-primary btn-sm" name="patientCHI" value="' . $patientID . '">Print Prescription</button>
+                </form></td>
+                </tr>';
 }
 ?>
 <!--                <td>200mg</td>-->
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bloodTestResultsModal">Input Blood Test Results</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-chi="<?php echo $patientID ?>" data-target="#bloodTestResultsModal">Input Blood Test Results</button>
 
         <br>
         <br>
@@ -112,7 +126,6 @@ WHERE patientID = ?",
     array("i", $patientID));
 
 $dosageDueDate = date("d/m/Y h:i", strtotime($dosagesDue["patientDosageDue"])); // formats date from y-m-d to d/m/y
-//$timeRemaining = round((strtotime($dosageDueDate) - strtotime("now")) / 3600, 1);
 $date1 = new DateTime("now");
 $date2 = new DateTime($dosagesDue["patientDosageDue"]);
 
@@ -122,7 +135,6 @@ $diff = $date2->diff($date1);
 // Call the format method on the DateInterval-object
 $timeRemaining = $diff->format('%h:%i:%s');
 
-
 if ($timeRemaining <= 0) {
     $timeRemaining = "DUE";
 }
@@ -131,12 +143,7 @@ echo '  <td>' . $timeRemaining . '</td>
         <td>' . $dosageDueDate . '</td>
         <td>' . $dosagesDue["patientDosage"] . 'mg</td>
         <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-chi="'. $patientID . '" data-target="#dosageGivenModal">Dosage Given</button></td>';
-
 ?>
-<!--                <td>Due</td>-->
-<!--                <td>15/09/2018</td>-->
-<!--                <td>17:00</td>-->
-<!--                <td>200mg</td>-->
             </tr>
             </tbody>
         </table>
@@ -144,21 +151,9 @@ echo '  <td>' . $timeRemaining . '</td>
         <br>
 
         <h3>Previous Dosages</h3>
-        <p>Initial Gentamicin Dose: 200mg</p>
-        <p>Predicted Frequency: 24 hourly</p>
+        <p>Initial Gentamicin Dose: <?php echo $dosagesDue["patientDosage"] ?>mg</p>
+        <p>Predicted Frequency: <?php echo $dosagesDue["patientDosageHourlyRate"] ?> hourly</p>
 
-        <table class="table table-responsive table-sm table-striped">
-            <thead>
-            <tr>
-                <th scope="col">Date Due</th>
-                <th scope="col">Date Given</th>
-                <th scope="col">Dosage</th>
-                <th scope="col">Ward</th>
-                <th scope="col">Given By #</th>
-                <th scope="col">Given By</th>
-            </tr>
-            </thead>
-            <tbody>
 <?php
 $previousDosages = $Database->selectMany("SELECT recordDosageGivenDate, recordDosageDue, recordDosageGivenAmount, recordDosageGivenBy, recordDoseGivenWard, staffTitle, staffID, staffTitle, staffFirstName, staffLastName
 FROM records
@@ -166,76 +161,52 @@ LEFT JOIN staff ON recordDosageGivenBy = staffID
 WHERE patientID = ?",
     array("i", $patientID));
 
-while ($row = $previousDosages->fetch_assoc()) {
-    $name = $row["staffTitle"] . " " . $row["staffFirstName"] . " " . $row["staffLastName"];
+if (mysqli_num_rows($previousDosages) > 0) {
+    echo '        <table class="table table-responsive table-sm table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Date Due</th>
+                    <th scope="col">Date Given</th>
+                    <th scope="col">Dosage</th>
+                    <th scope="col">Ward</th>
+                    <th scope="col">Given By #</th>
+                    <th scope="col">Given By</th>
+                </tr>
+                </thead>
+                <tbody>';
 
-    echo '<tr>
-        <td>' . $row["recordDosageDue"] . '</td>
-        <td>' . $row["recordDosageGivenDate"] . '</td>
-        <td>' . $row["recordDosageGivenAmount"] . '</td>
-        <td>' . $row["recordDoseGivenWard"] . '</td>
-        <td>' . $row["recordDosageGivenBy"] . '</td>
-        <td>' . $name . '</td>
-    </tr>';
+    while ($row = $previousDosages->fetch_assoc()) {
+        $name = $row["staffTitle"] . " " . $row["staffFirstName"] . " " . $row["staffLastName"];
+
+        echo '<tr>
+            <td>' . $row["recordDosageDue"] . '</td>
+            <td>' . $row["recordDosageGivenDate"] . '</td>
+            <td>' . $row["recordDosageGivenAmount"] . '</td>
+            <td>' . $row["recordDoseGivenWard"] . '</td>
+            <td>' . $row["recordDosageGivenBy"] . '</td>
+            <td>' . $name . '</td>
+        </tr>';
+    }
+    echo '            </tbody>
+        </table>';
+} else {
+    echo '<div class="alert alert-info" role="alert">
+              Currently there are no previous dosages.
+            </div>';
 }
 ?>
-            </tbody>
-        </table>
 
         <br>
 
         <h3>Stop Gentamicin Treatment</h3>
-        <p>Remove all scheduled Gentamicin dosages for this patient.</p>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dosageGivenModal">Stop Gentamicin Treatment</button>
+        <p>Remove all scheduled gentamicin dosages for this patient.</p>
+        <form method="post" action="stoptreatment.php">
+            <button type="submit" class="btn btn-primary" data-toggle="modal" name="patientCHI" value="<?php echo $patientID ?>">Stop Gentamicin Treatment</button>
+        </form>
 
         <?php require "dosagegivenmodal.php"; ?>
 
-        <div class="modal fade" id="bloodTestResultsModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <form method="post" action="bloodresults.php" id="needs-validation" novalidate>
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="bloodTestResultsTitle">Blood Test Results</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="date">Blood Taken On</label>
-                                <input type="date" class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" required>
-                                <div class="invalid-feedback">Please provide a date the blood was received on.</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="resultsNumber">Results Number</label>
-                                <input type="text" class="form-control" id="resultsNumber" name="resultsNumber" placeholder="Results Number" required>
-                                <div class="invalid-feedback">Please provide a result number.</div>
-                            </div>
-                            <div class="form-group">
-                                <label for="plasmaCreatinine">Plasma Creatinine Level</label>
-                                <input type="text" class="form-control" id="plasmaCreatinine" name="plasmaCreatinine" placeholder="Plasma Creatinine Level" required>
-                                <div class="invalid-feedback">Please provide a plasma creatinine level.</div>
-                            </div>
-                            <input type="hidden" id="patientCHI" name="patientCHI" value="<?php echo $patientID ?>"/>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                $('#bloodTestResultsModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var chi = button.data('chi'); // Extract info from data-* attributes
-                    $("#patientCHI").val(chi);
-                });
-            });
-        </script>
+        <?php require "bloodtestmodal.php"; ?>
 
     </div>
 

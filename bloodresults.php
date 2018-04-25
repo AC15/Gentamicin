@@ -7,19 +7,21 @@ $plasmaCreatinine = $_POST["plasmaCreatinine"];
 require "lib/Database.php";
 $Database = new Database(); // create an instance of database
 
+echo $resultsNumber, $patientCHI, $date, $plasmaCreatinine;
+
 // insert results to the blood table
 $Database->insert("INSERT INTO bloods VALUES (?, ?, ?, ?)",
     array("sisd", $resultsNumber, $patientCHI, $date, $plasmaCreatinine));
 
 // select dosage information if it exists
 $dosageInfo = $Database->select("SELECT *
-FROM dosage
+FROM dosagesdue
 WHERE patientID = ?",
     array("i", $patientCHI));
 
 if ($dosageInfo) {
-    $dose = $dosageInfo["dosage"];
-    $hourlyRate = $dosageInfo["hourlyRate"];
+    $dose = $dosageInfo["patientDosage"];
+    $hourlyRate = $dosageInfo["patientDosageHourlyRate"];
 } else {
     $sex = "M";
     $age = 44;
@@ -67,16 +69,14 @@ if ($dosageInfo) {
             dosage(48, 260, 240, 240, 200, 180);
         }
     }
-
-    // add the initial dosage to the table
-    $Database->insert("INSERT INTO dosage VALUES (?, ?, ?)",
-        array("idi", $patientCHI, $dose, $hourlyRate));
+//
+//    // add the initial dosage to the table
+//    $Database->insert("INSERT INTO dosage VALUES (?, ?, ?)",
+//        array("idi", $patientCHI, $dose, $hourlyRate));
 }
 
 
 //$date = date('Y-m-d H:i', strtotime("now +1 hour"));
-
-echo $patientCHI . " " . $hourlyRate . " " . $dose;
 
 $Database->insert("INSERT INTO dosagesdue VALUES (?, CURRENT_TIMESTAMP, ?, ?)",
     array("iii", $patientCHI, $hourlyRate, $dose));

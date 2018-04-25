@@ -18,7 +18,7 @@ if ($row) {
     $Session->start();
 
     $_SESSION["Login"] = true;
-    $_SESSION["UserID"] = $row["CustomerID"];
+    $_SESSION["UserID"] = $row["staffID"];
     header("Location: index.php");
 } else {
     header("Location: login.php");

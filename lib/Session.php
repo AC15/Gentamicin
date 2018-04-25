@@ -2,7 +2,7 @@
 
 class Session {
     private $isLoggedIn;
-    private $customerID;
+    private $staffID;
 
     public function __construct() {
         if (!$this->isLoggedIn) {
@@ -10,7 +10,7 @@ class Session {
         }
 
         $this->isLoggedIn = $_SESSION["Login"];
-        $this->customerID = $_SESSION["UserID"];
+        $this->staffID = $_SESSION["UserID"];
     }
 
     /**
@@ -43,7 +43,7 @@ class Session {
         return $this->isLoggedIn;
     }
 
-    public function getCustomerID() {
-        return $this->customerID;
+    public function getStaffID() {
+        return $this->staffID;
     }
 }

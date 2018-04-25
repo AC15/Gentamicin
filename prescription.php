@@ -1,3 +1,26 @@
+<?php
+require "lib/Database.php";
+$Database = new Database(); // create an instance of database
+
+require "lib/Session.php";
+$Session = new Session();
+
+$patientCHI = $_POST["patientCHI"];
+$staffID = $Session->getStaffID();
+
+$patient = $Database->select("SELECT patientinfo.patientID, patientDOB, patientFirstName, patientLastName, patientDosageDue, patientDosage
+FROM dosagesdue
+LEFT JOIN patientinfo ON patientinfo.patientID = dosagesdue.patientID
+WHERE patientinfo.patientID = ?",
+    array("i", $patientCHI));
+
+$staff = $Database->select("SELECT CONCAT(staffTitle, '. ', staffFirstName, ' ', staffLastName) AS staffName
+FROM staff
+WHERE staffID = ?",
+    array("i", $staffID));
+
+$dob = date("d/m/Y", strtotime($patient["patientDOB"])); // formats date from y-m-d to d/m/y
+?>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
 <style>
@@ -11,9 +34,9 @@
     <thead>
     <tr>
         <th scope="col">
-            <p>Patient's name</p>
-            <p>DOB</p>
-            <p>CHI no</p>
+            <p>Patient Name: <?php echo $patient["patientFirstName"] . " " . $patient["patientLastName"] ?></p>
+            <p>Date of Birth: <?php echo $dob ?></p>
+            <p>CHI: 32641</p>
         </th>
     </tr>
     </thead>
@@ -38,8 +61,8 @@
     <tbody>
     <tr>
         <td>Gentamicin</td>
-        <td>0.75g</td>
-        <td>Quantity</td>
+        <td>?</td>
+        <td><?php echo $patient["patientDosage"] ?>mg</td>
     </tr>
     </tbody>
 </table>
@@ -48,15 +71,15 @@
     <thead>
     <tr>
         <th scope="col">
-            <p>Doctor's Name</p>
-            <p>Registration No: ________________________</p>
+            <p>Doctor's Name: <?php echo $staff["staffName"] ?></p>
+            <p>Registration No: <?php echo $staffID ?></p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Signature: ________________________</p>
         </th>
     </tr>
     </thead>
 </table>
 
-<script>
-    window.print();
-    setTimeout(window.close, 0); // this will close the page when user clicks on cancel (edge does not work)
-</script>
+<!--<script>-->
+<!--    window.print();-->
+<!--    setTimeout(window.close, 0); // this will close the page when user clicks on cancel (edge does not work)-->
+<!--</script>-->

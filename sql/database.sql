@@ -6,25 +6,22 @@
 
 # added staffPassword
 # added result number to blood
-# added dosage table
 
 /*
 *run first
 *delete tables of same name to create new tables
 */
 
-DROP TABLE IF EXISTS patientInfo;
+DROP TABLE IF EXISTS patientinfo;
 DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS dosage;
-DROP TABLE IF EXISTS dosagesDue;
+DROP TABLE IF EXISTS dosagesdue;
 DROP TABLE IF EXISTS bloods;
 DROP TABLE IF EXISTS records;
-DROP TRIGGER IF EXISTS updateRecord;
 
 /*
 *Table : Patient table
 */
-CREATE TABLE patientInfo (
+CREATE TABLE patientinfo (
   patientID int(5),
   patientFirstName varchar(50),
   patientLastName varchar(50),
@@ -33,16 +30,6 @@ CREATE TABLE patientInfo (
   patientHeight int(3),
   patientCurrentWard varchar(10),
   patientGender Char(1),
-  PRIMARY KEY (patientID)
-);
-
-/*
-*Table : Dosage table
-*/
-CREATE TABLE dosage (
-  patientID int(5),
-  dosage int(3),
-  hourlyRate int(3),
   PRIMARY KEY (patientID)
 );
 
@@ -64,7 +51,7 @@ CREATE TABLE bloods (
 /*
 *Table : Dosage Information
 */
-CREATE TABLE dosagesDue (
+CREATE TABLE dosagesdue (
   patientID int(5),
 #   patientDosageGivenDate DATE,
   patientDosageDue DATETIME,
@@ -106,37 +93,11 @@ CREATE TABLE records (
   PRIMARY KEY (patientID,recordDosageGivenDate)
 );
 
-/*
-*Trigger : Complete Dosage
-*Not functioning properly
-*Suggest using a php query to do the same
-*/
-
-# CREATE TRIGGER `updateRecord`
-# BEFORE DELETE ON `dosages`
-# FOR EACH ROW
-# BEGIN
-#   INSERT INTO records VALUES (
-#     (SELECT * FROM dosages
-#      WHERE patientID = '1'
-#      AND patientDosageGivenDate = 'blah')
-#   );
-# END;
-
-# CREATE TRIGGER updateRecord
-# BEFORE DELETE ON dosages
-# FOR EACH ROW
-# BEGIN
-#   INSERT INTO records
-#     SELECT * FROM dosages WHERE Transaction_status = 2;
-#   DELETE FROM dosages WHERE Transaction_status = 2;
-# END;
-
 /* Sample data */
-INSERT INTO patientInfo VALUES ('12345','John','Doe','190','1956-02-01','156','Ward 1','M');
-INSERT INTO patientInfo VALUES ('32641','Jane','Doe','140','1943-04-09','147','Ward 2','F');
-INSERT INTO patientInfo VALUES ('95632','Henry','Hippo','148','1932-05-04','132','Ward 1','M');
-INSERT INTO patientInfo VALUES ('25845','Harry','Happy','80','1951-12-12','110','Ward','M');
+INSERT INTO patientinfo VALUES ('12345','John','Doe','190','1956-02-01','156','Ward 1','M');
+INSERT INTO patientinfo VALUES ('32641','Jane','Doe','140','1943-04-09','147','Ward 2','F');
+INSERT INTO patientinfo VALUES ('95632','Henry','Hippo','148','1932-05-04','132','Ward 1','M');
+INSERT INTO patientinfo VALUES ('25845','Harry','Happy','80','1951-12-12','110','Ward','M');
 
 # INSERT INTO bloods VALUES ('12345','2018-01-01','123','421','421','2018-01-03','21.1');
 # INSERT INTO bloods VALUES ('95632','2018-04-06','123','421','421','2018-04-08','14.2');
