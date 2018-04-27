@@ -4,20 +4,31 @@ $patientCHI = $_POST["patientCHI"];
 $date = $_POST["date"];
 $plasmaCreatinine = $_POST["plasmaCreatinine"];
 
+$date = DateTime::createFromFormat("d/m/Y", $date);
+$date = $date->format("Y-m-d");
+
+// Displays an error when a date from the future is inputted
+if (new DateTime("today") < new DateTime($date)) {
+    $message = "You cannot input a date from the future.";
+    $type = "danger";
+    require "message.php";
+}
+
 require "lib/Database.php";
 $Database = new Database(); // create an instance of database
-
-echo $resultsNumber, $patientCHI, $date, $plasmaCreatinine;
-
-// insert results to the blood table
-$Database->insert("INSERT INTO bloods VALUES (?, ?, ?, ?)",
-    array("sisd", $resultsNumber, $patientCHI, $date, $plasmaCreatinine));
 
 // select dosage information if it exists
 $dosageInfo = $Database->select("SELECT *
 FROM dosagesdue
 WHERE patientID = ?",
     array("i", $patientCHI));
+
+// Displays an error when a date from the future is inputted
+if (new DateTime("today") < new DateTime($date)) {
+    $message = "You cannot input a date from the future.";
+    $type = "danger";
+    require "message.php";
+}
 
 if ($dosageInfo) {
     $dose = $dosageInfo["patientDosage"];
@@ -69,15 +80,20 @@ if ($dosageInfo) {
             dosage(48, 260, 240, 240, 200, 180);
         }
     }
-//
-//    // add the initial dosage to the table
-//    $Database->insert("INSERT INTO dosage VALUES (?, ?, ?)",
-//        array("idi", $patientCHI, $dose, $hourlyRate));
 }
 
+// insert results to the blood table
+$insertBlood = $Database->insert("INSERT INTO bloods VALUES (?, ?, ?, ?)",
+    array("sisd", $resultsNumber, $patientCHI, $date, $plasmaCreatinine));
 
-//$date = date('Y-m-d H:i', strtotime("now +1 hour"));
+// Displays an error when insert to blood table is not correct
+if (!$insertBlood) {
+    $message = "An error occurred. Please check if this record was not already entered.";
+    $type = "danger";
+    require "message.php";
+}
 
+// If a dosage is already due, it won't add it
 $Database->insert("INSERT INTO dosagesdue VALUES (?, CURRENT_TIMESTAMP, ?, ?)",
     array("iii", $patientCHI, $hourlyRate, $dose));
 

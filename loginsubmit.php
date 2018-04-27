@@ -6,7 +6,7 @@ $password = $_POST["password"];
 
 $Database = new Database();
 
-$row = $Database->select("SELECT staffID
+$row = $Database->select("SELECT staffID, staffRole
 FROM staff
 WHERE staffID=?
 AND staffPassword=?",
@@ -18,7 +18,8 @@ if ($row) {
     $Session->start();
 
     $_SESSION["Login"] = true;
-    $_SESSION["UserID"] = $row["staffID"];
+    $_SESSION["StaffID"] = $row["staffID"];
+    $_SESSION["StaffRole"] = $row["staffRole"];
     header("Location: index.php");
 } else {
     header("Location: login.php");

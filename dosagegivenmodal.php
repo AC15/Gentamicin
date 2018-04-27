@@ -3,20 +3,20 @@
         <div class="modal-content">
             <form method="post" action="dosagegiven.php" id="needs-validation" novalidate>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dosageGivenModalTitle">Dosage Given (#1234567890 John Doe)</h5>
+                    <h5 class="modal-title" id="dosageGivenModalTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="date">Date</label>
-                        <input type="date" class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" required>
+                        <label for="bloodTestDatePicker">Date</label>
+                        <input class="form-control" id="dosageGivenDatePicker" name="date" placeholder="dd/mm/yyyy" required>
                         <div class="invalid-feedback">Please provide a date.</div>
                     </div>
                     <div class="form-group">
                         <label for="time">Time</label>
-                        <input type="text" class="form-control" id="time" name="time" placeholder="Time (00:00)" required>
+                        <input type="text" class="form-control" id="time" name="time" pattern="^([0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="Time (00:00)" required>
                         <div class="invalid-feedback">Please provide a time.</div>
                     </div>
                     <div class="form-group">
@@ -36,7 +36,8 @@
                             <option selected disabled hidden value="">Choose...</option>
 <?php
 $doctors = $Database->selectMany("SELECT staffID, staffTitle, staffFirstName, staffLastName
-FROM staff",
+FROM staff
+WHERE staffRole = 'Doctor'",
     null);
 
 while ($row = $doctors->fetch_assoc()) {
@@ -64,6 +65,12 @@ while ($row = $doctors->fetch_assoc()) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var chi = button.data('chi'); // Extract info from data-* attributes
             $("#patientCHI").val(chi);
+        });
+
+        // Activates the jQuery dates picker
+        $("#dosageGivenDatePicker").datepicker({
+            maxDate: '0', // doesn't allow dates from the future to be selected
+            dateFormat: 'dd/mm/yy'
         });
     });
 </script>

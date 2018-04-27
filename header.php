@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="css/font-awesome.min.css">
 
     <title>Gentamicin App</title>
 </head>
@@ -31,6 +31,8 @@
             </li>
         </ul>
 <?php
+date_default_timezone_set("Europe/London"); // sets the timezone to uk time
+
 require "lib/Session.php";
 $Session = new Session();
 

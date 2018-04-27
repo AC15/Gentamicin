@@ -3,6 +3,7 @@
 class Session {
     private $isLoggedIn;
     private $staffID;
+    private $staffRole;
 
     public function __construct() {
         if (!$this->isLoggedIn) {
@@ -10,7 +11,8 @@ class Session {
         }
 
         $this->isLoggedIn = $_SESSION["Login"];
-        $this->staffID = $_SESSION["UserID"];
+        $this->staffID = $_SESSION["StaffID"];
+        $this->staffRole = $_SESSION["StaffRole"];
     }
 
     /**
@@ -35,7 +37,8 @@ class Session {
     function logout() {
         $this->start();
         $_SESSION["Login"] = false;
-        $_SESSION["UserID"] = false;
+        $_SESSION["StaffID"] = false;
+        $_SESSION["StaffRole"] = false;
         header("Location: index.php");
     }
 
@@ -45,5 +48,9 @@ class Session {
 
     public function getStaffID() {
         return $this->staffID;
+    }
+
+    public function getStaffRole() {
+        return $this->staffRole;
     }
 }

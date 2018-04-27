@@ -61,8 +61,8 @@ $dob = date("d/m/Y", strtotime($patient["patientDOB"])); // formats date from y-
     <tbody>
     <tr>
         <td>Gentamicin</td>
-        <td>?</td>
         <td><?php echo $patient["patientDosage"] ?>mg</td>
+        <td>1</td>
     </tr>
     </tbody>
 </table>
@@ -79,7 +79,7 @@ $dob = date("d/m/Y", strtotime($patient["patientDOB"])); // formats date from y-
     </thead>
 </table>
 
-<!--<script>-->
-<!--    window.print();-->
-<!--    setTimeout(window.close, 0); // this will close the page when user clicks on cancel (edge does not work)-->
-<!--</script>-->
+<script>
+    window.print();
+    setTimeout(window.close, 0); // this will close the page when user clicks on cancel (edge does not work)
+</script>

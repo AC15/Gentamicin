@@ -60,7 +60,8 @@ echo "          <td>" . $patientData["patientID"] . "</td>
 <?php
 $bloodResults = $Database->selectMany("SELECT *
 FROM bloods
-WHERE patientID = ?",
+WHERE patientID = ?
+ORDER BY patientBloodResultNumber",
     array("i", $patientID));
 
 if (mysqli_num_rows($bloodResults) == 0) {
@@ -81,11 +82,15 @@ if (mysqli_num_rows($bloodResults) == 0) {
                 <th scope="col">Results (mg/l)</th>
 <!--                <th scope="col">Gentamicin Dosage</th>-->
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
 <?php
 while ($row = $bloodResults->fetch_assoc()) {
+    $bloodTestDate = new DateTime($row["patientBloodTakenDate"]);
+    $bloodTestDate = $bloodTestDate->format('d/m/Y');
+
     echo '      <tr>
                 <td>' . $row["patientBloodResultNumber"] . '</td>
                 <td>' . $row["patientBloodTakenDate"] . '</td>
@@ -94,6 +99,7 @@ while ($row = $bloodResults->fetch_assoc()) {
                 <td><form method="post" action="prescription.php">
                     <button type="submit" class="btn btn-primary btn-sm" name="patientCHI" value="' . $patientID . '">Print Prescription</button>
                 </form></td>
+                <td><button type="button" class="btn btn-primary btn-sm" data-date="' . $bloodTestDate . '" data-number="' . $row["patientBloodResultNumber"] . '" data-plasma="' . $row["patientPlasmaCreatinine"] . '" data-toggle="modal" data-chi="" data-target="#editBloodTestResultsModal">Edit</button></td>
                 </tr>';
 }
 ?>
@@ -103,11 +109,31 @@ while ($row = $bloodResults->fetch_assoc()) {
         </table>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-chi="<?php echo $patientID ?>" data-target="#bloodTestResultsModal">Input Blood Test Results</button>
 
-        <br>
+<?php
+// Hides the calculated dosages from the view of other users than Doctors and when there are no dosages due
+if ($Session->getStaffRole() != "Doctor") {
+    require "bloodtestmodal.php";
+    require "footer.html";
+    exit();
+}
+?>
+
         <br>
         <br>
 
+<?php
+$dosagesDue = $Database->select("SELECT *
+FROM dosagesdue
+WHERE patientID = ?",
+    array("i", $patientID));
+
+$isPatientNotTreated = !is_null($dosagesDue["patientDosage"]);
+
+if ($isPatientNotTreated) {
+    echo '        <br>
         <h3>Next Dosage</h3>
+        <p>Initial Gentamicin Dose: ' . $dosagesDue["patientDosage"] . 'mg</p>
+        <p>Predicted Frequency: ' . $dosagesDue["patientDosageHourlyRate"] . ' hourly</p>
         <table class="table table-responsive table-sm">
             <thead>
             <tr>
@@ -118,47 +144,33 @@ while ($row = $bloodResults->fetch_assoc()) {
             </tr>
             </thead>
             <tbody>
-            <tr>
-<?php
-$dosagesDue = $Database->select("SELECT *
-FROM dosagesdue
-WHERE patientID = ?",
-    array("i", $patientID));
+            <tr>';
 
-$dosageDueDate = date("d/m/Y h:i", strtotime($dosagesDue["patientDosageDue"])); // formats date from y-m-d to d/m/y
-$date1 = new DateTime("now");
-$date2 = new DateTime($dosagesDue["patientDosageDue"]);
+    $dosageDueDate = new DateTime($dosagesDue["patientDosageDue"]);
+    $currentDate = new DateTime("now");
 
-// The diff-methods returns a new DateInterval-object...
-$diff = $date2->diff($date1);
+    $formattedDosageDueDate = $dosageDueDate->format('Y-m-d H:i:s');
+    $formattedDateDue = $dosageDueDate->format('d/m/Y H:i:s');
 
-// Call the format method on the DateInterval-object
-$timeRemaining = $diff->format('%h:%i:%s');
-
-if ($timeRemaining <= 0) {
-    $timeRemaining = "DUE";
-}
-
-echo '  <td>' . $timeRemaining . '</td>
-        <td>' . $dosageDueDate . '</td>
+    echo '  <td><p id="dosageDueCounter"></p></td>
+        <td>' . $formattedDateDue . '</td>
         <td>' . $dosagesDue["patientDosage"] . 'mg</td>
-        <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-chi="'. $patientID . '" data-target="#dosageGivenModal">Dosage Given</button></td>';
-?>
+        <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-chi="' . $patientID . '" data-target="#dosageGivenModal">Dosage Given</button></td>
+
             </tr>
             </tbody>
-        </table>
-
+        </table>';
+}
+?>
         <br>
 
-        <h3>Previous Dosages</h3>
-        <p>Initial Gentamicin Dose: <?php echo $dosagesDue["patientDosage"] ?>mg</p>
-        <p>Predicted Frequency: <?php echo $dosagesDue["patientDosageHourlyRate"] ?> hourly</p>
-
+        <h3>Previous Gentamicin Dosages</h3>
 <?php
 $previousDosages = $Database->selectMany("SELECT recordDosageGivenDate, recordDosageDue, recordDosageGivenAmount, recordDosageGivenBy, recordDoseGivenWard, staffTitle, staffID, staffTitle, staffFirstName, staffLastName
 FROM records
 LEFT JOIN staff ON recordDosageGivenBy = staffID
-WHERE patientID = ?",
+WHERE patientID = ?
+ORDER BY recordDosageDue",
     array("i", $patientID));
 
 if (mysqli_num_rows($previousDosages) > 0) {
@@ -177,10 +189,12 @@ if (mysqli_num_rows($previousDosages) > 0) {
 
     while ($row = $previousDosages->fetch_assoc()) {
         $name = $row["staffTitle"] . " " . $row["staffFirstName"] . " " . $row["staffLastName"];
+        $formattedDateDue = date("d/m/Y h:i", strtotime($row["recordDosageDue"])); // formats date from y-m-d to d/m/y
+        $formattedDateGiven = date("d/m/Y h:i", strtotime($row["recordDosageGivenDate"])); // formats date from y-m-d to d/m/y
 
         echo '<tr>
-            <td>' . $row["recordDosageDue"] . '</td>
-            <td>' . $row["recordDosageGivenDate"] . '</td>
+            <td>' . $formattedDateDue . '</td>
+            <td>' . $formattedDateGiven . '</td>
             <td>' . $row["recordDosageGivenAmount"] . '</td>
             <td>' . $row["recordDoseGivenWard"] . '</td>
             <td>' . $row["recordDosageGivenBy"] . '</td>
@@ -194,17 +208,28 @@ if (mysqli_num_rows($previousDosages) > 0) {
               Currently there are no previous dosages.
             </div>';
 }
-?>
 
-        <br>
-
+if ($isPatientNotTreated) {
+    echo '        <br>
+        
         <h3>Stop Gentamicin Treatment</h3>
         <p>Remove all scheduled gentamicin dosages for this patient.</p>
         <form method="post" action="stoptreatment.php">
-            <button type="submit" class="btn btn-primary" data-toggle="modal" name="patientCHI" value="<?php echo $patientID ?>">Stop Gentamicin Treatment</button>
-        </form>
+            <button type="submit" class="btn btn-primary" data-toggle="modal" name="patientCHI" value="' . $patientID . '">Stop Gentamicin Treatment</button>
+        </form>';
+}
+?>
+
+        <script src="js/formChecker.js"></script>
+        <script src="js/timer.js"></script>
+        <script>
+            var countDownDate = new Date("<?php echo $formattedDosageDueDate; ?>").getTime();
+            timer(countDownDate, "dosageDueCounter");
+        </script>
 
         <?php require "dosagegivenmodal.php"; ?>
+
+        <?php require "editbloodtestmodal.php"; ?>
 
         <?php require "bloodtestmodal.php"; ?>
 

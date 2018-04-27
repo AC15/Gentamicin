@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS bloods;
 DROP TABLE IF EXISTS records;
 
 /*
-*Table : Patient table
+*Table: Patient table
 */
 CREATE TABLE patientinfo (
   patientID int(5),
@@ -44,12 +44,12 @@ CREATE TABLE bloods (
 #   patientBloodRecievedBy int(5),
 #   patientBloodResultsEnteredBy int(5),
 #   patientBloodResultsEnteredDate DATE,
-  patientPlasmaCreatinine DOUBLE(3,1),
+  patientPlasmaCreatinine DOUBLE(4,1),
   PRIMARY KEY (patientBloodResultNumber)
 );
 
 /*
-*Table : Dosage Information
+*Table: Dosage Information
 */
 CREATE TABLE dosagesdue (
   patientID int(5),
@@ -64,9 +64,8 @@ CREATE TABLE dosagesdue (
 );
 
 /*
-*Table : Staff Info
+*Table: Staff Info
 */
-
 CREATE TABLE staff (
   staffID int,
   staffTitle VARCHAR(80),
@@ -80,7 +79,6 @@ CREATE TABLE staff (
 /*
 *Table: Records Table
 */
-
 CREATE TABLE records (
 #   recordID int(5),
   patientID int(5),
@@ -105,4 +103,4 @@ INSERT INTO patientinfo VALUES ('25845','Harry','Happy','80','1951-12-12','110',
 
 INSERT INTO staff VALUES ('123','Dr','Bill','Lee','Doctor','test');
 INSERT INTO staff VALUES ('321','Dr','Bob','Bing','Doctor','test');
-INSERT INTO staff VALUES ('421','Dr','Bonnie','Lass','LabWorker','test');
+INSERT INTO staff VALUES ('421','Dr','Bonnie','Lass','Lab','test');

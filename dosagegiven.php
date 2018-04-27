@@ -5,7 +5,16 @@ $ward = $_POST["ward"];
 $person = $_POST["person"];
 $patientCHI = $_POST["patientCHI"];
 
+$date = DateTime::createFromFormat("d/m/Y", $date);
+$date = $date->format("Y-m-d");
 $datetime = $date . " " . $time . ":00";
+
+// Displays an error when a date from the future is inputted
+if (new DateTime("today") < new DateTime($date)) {
+    $message = "You cannot input a date from the future.";
+    $type = "danger";
+    require "message.php";
+}
 
 require "lib/Database.php";
 $Database = new Database(); // create an instance of database
