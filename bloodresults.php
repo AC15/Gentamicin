@@ -4,6 +4,7 @@ $patientCHI = $_POST["patientCHI"];
 $date = $_POST["date"];
 $plasmaCreatinine = $_POST["plasmaCreatinine"];
 
+date_default_timezone_set("Europe/London"); // sets the timezone to uk time
 $date = DateTime::createFromFormat("d/m/Y", $date);
 $date = $date->format("Y-m-d");
 
@@ -30,15 +31,21 @@ if (new DateTime("today") < new DateTime($date)) {
     require "message.php";
 }
 
-if ($dosageInfo) {
+if ($dosageInfo) { // if blood results were given take the values and continue
     $dose = $dosageInfo["patientDosage"];
     $hourlyRate = $dosageInfo["patientDosageHourlyRate"];
-} else {
-    $sex = "M";
-    $age = 44;
-    $height = 155;
-    $weight = 155;
-    $plasmaCreatinine = 44;
+} else { // if not then calculate the dosage
+    $patientInfo = $Database->select("SELECT patientWeight, patientHeight, patientGender, patientDOB
+    FROM patientinfo
+    WHERE patientID = ?",
+            array("i", $patientCHI));
+
+    $dob = $patientInfo["patientDOB"];
+    $age = date_diff(date_create($dob), date_create("today"))->y; // converts dob to age
+
+    $sex = $patientInfo["patientGender"];
+    $height = $patientInfo["patientHeight"];
+    $weight = $patientInfo["patientWeight"];
 
     $hourlyRate = 0;
     $dose = 0;
@@ -88,7 +95,7 @@ $insertBlood = $Database->insert("INSERT INTO bloods VALUES (?, ?, ?, ?)",
 
 // Displays an error when insert to blood table is not correct
 if (!$insertBlood) {
-    $message = "An error occurred. Please check if this record was not already entered.";
+    $message = "An error occurred. Please check if a record with the same result number was not already entered.";
     $type = "danger";
     require "message.php";
 }
@@ -97,6 +104,7 @@ if (!$insertBlood) {
 $Database->insert("INSERT INTO dosagesdue VALUES (?, CURRENT_TIMESTAMP, ?, ?)",
     array("iii", $patientCHI, $hourlyRate, $dose));
 
+// calculates ideal body weight
 function calculateIBW() {
     global $height;
     global $x;
@@ -114,6 +122,7 @@ function calculateIBW() {
     return $x + (2.3 * $ft_dif);
 }
 
+// validates the inputs and displays an error message
 function validate() {
     global $age;
     global $creatinineClearance;
@@ -121,15 +130,34 @@ function validate() {
     global $weight;
     global $plasmaCreatinine;
 
-    if ($age > 70 && $age <= 16
-        && $creatinineClearance < 20
-        && ($height < 100) || ($height > 250)
-        && is_null($age) && is_null($height) && is_null($weight) && is_null($plasmaCreatinine)) {
-        return false;
+    $message = "";
+
+    if ($age > 70) {
+        $message = "The patient is too old to receive gentamicin treatment.";
+    } else if ($age < 17) {
+        $message = "The patient is too young to receive gentamicin treatment.";
+    } else if ($creatinineClearance < 20) {
+        $message = "The creatine clearance needs to be above 20.";
+    } else if ($height < 100) {
+        $message = "The patient is too short to receive gentamicin treatment.";
+    } else if ($height > 250) {
+        $message = "The patient is too tall to receive gentamicin treatment.";
+    } else if (is_null($age)
+        || is_null($height)
+        || is_null($weight)
+        || is_null($plasmaCreatinine)) {
+        $message = "There is not enough data to calculate the dosage.";
     }
+
+    if ($message !== "") {
+        $type = "danger";
+        require "message.php";
+    }
+
     return true;
 }
 
+// calculates the dosage
 function dosage($hourly_rate, $dose1, $dose2, $dose3, $dose4, $dose5) {
     global $hourlyRate;
     global $weight;
@@ -154,4 +182,5 @@ function dosage($hourly_rate, $dose1, $dose2, $dose3, $dose4, $dose5) {
     }
 }
 
+// redirects user to the previous page
 header('Location: ' . $_SERVER['HTTP_REFERER']);

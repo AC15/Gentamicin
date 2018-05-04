@@ -10,9 +10,9 @@ class Session {
             $this->start();
         }
 
-        $this->isLoggedIn = $_SESSION["Login"];
-        $this->staffID = $_SESSION["StaffID"];
-        $this->staffRole = $_SESSION["StaffRole"];
+        $this->isLoggedIn = isset($_SESSION["Login"]) ? $_SESSION["Login"] : null;
+        $this->staffID = isset($_SESSION["StaffID"]) ? $_SESSION["StaffID"] : null;
+        $this->staffRole = isset($_SESSION["StaffRole"]) ? $_SESSION["StaffRole"] : null;
     }
 
     /**
@@ -31,9 +31,9 @@ class Session {
         }
     }
 
-    /**
-     * Logs out the user
-     */
+        /**
+         * Logs out the user
+         */
     function logout() {
         $this->start();
         $_SESSION["Login"] = false;

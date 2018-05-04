@@ -11,6 +11,7 @@ function dose() {
     var x = 0;
     var f = 0;
 
+    // each gender has different values
     if (sex === "Male") {
         x = 50;
         f = 1.23
@@ -45,20 +46,29 @@ function dose() {
         else if (creatinineClearance >= 21) {
             dosage(48, 260, 240, 240, 200, 180);
         }
+
+        // displays the results on the screen
+        document.getElementById("result").innerHTML = dose + "mg";
+        document.getElementById("hourlyRate").innerHTML = hourlyRate + "hrs";
+        document.getElementById("creatinineClearance").innerHTML = creatinineClearance.toFixed(2).toString();
+    } else {
+        reset();
     }
-    //document.getElementById("result").innerHTML = ft_dif;
-    //document.getElementById("result").innerHTML = a_creat_clearance;
 
-    document.getElementById("result").innerHTML = dose + "mg";
-    document.getElementById("hourlyRate").innerHTML = hourlyRate + "hrs";
-    document.getElementById("creatinineClearance").innerHTML = creatinineClearance.toFixed(2).toString();
-
+    /**
+     * Resets the calculator
+     */
     function reset() {
         document.getElementById("result").innerHTML = "0mg";
         document.getElementById("hourlyRate").innerHTML = "0hrs";
-        document.getElementById("creatinineClearance").innerHTML = "CrCl = 0";
+        document.getElementById("creatinineClearance").innerHTML = "0";
     }
 
+    /**
+     * Calculates Ideal body weight
+     *
+     * @returns (number) ideal body weight
+     */
     function calculateIBW() {
         var ft_dif = 0;
         // How far over 5ft
@@ -66,8 +76,6 @@ function dose() {
             var cm_dif = height - 152.4;
             var inchsum = cm_dif * 0.39370;
 
-            // ft_to_inch = height_ft*12;
-            //var inchsum = (height_inch*1) + ft_to_inch;
             ft_dif = 60 - inchsum; // Find difference from 5ft (60 inches)
         }
 
@@ -75,17 +83,33 @@ function dose() {
         return x + (2.3 * ft_dif);
     }
 
+    /**
+     * Validates the information
+     *
+     * @returns {boolean}
+     */
     function validate() {
-        if (age > 70 && age <= 16
-            && creatinineClearance < 20
-            && (height < 100) || (height > 250)
-            && isNaN(age) && isNaN(height) && isNaN(weight) && isNaN(plasmaCreatinine)) {
-            reset();
-            return false;
-        }
-        return true;
+        return !(age > 70
+        || age < 17
+        || creatinineClearance < 20
+        || (height < 100)
+        || (height > 250)
+        || isNaN(age)
+        || isNaN(height)
+        || isNaN(weight)
+        || isNaN(plasmaCreatinine));
     }
 
+    /**
+     * Calculates the dosage
+     *
+     * @param hourly_rate
+     * @param dose1
+     * @param dose2
+     * @param dose3
+     * @param dose4
+     * @param dose5
+     */
     function dosage(hourly_rate, dose1, dose2, dose3, dose4, dose5) {
         hourlyRate = hourly_rate;
 

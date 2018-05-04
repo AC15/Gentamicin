@@ -17,8 +17,8 @@
             </div>
             <div class="form-group">
                 <label for="age">Age</label>
-                <input type="number" class="form-control" min="16" max="70" id="age" name="age" placeholder="Age" required>
-                <div class="invalid-feedback">Please provide an age, between 16 and 70.</div>
+                <input type="number" class="form-control" min="17" max="70" id="age" name="age" placeholder="Age" required>
+                <div class="invalid-feedback">Please provide an age, between 17 and 70.</div>
             </div>
             <div class="form-group">
                 <label for="weight">Actual Weight (kilograms)</label>
@@ -27,8 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="height">Height (centimeters)</label>
-                <input type="number" class="form-control" min="100" max="250" id="height" name="height" placeholder="Height (centimeters)"
-                       required>
+                <input type="number" class="form-control" min="100" max="250" id="height" name="height" placeholder="Height (centimeters)" required>
                 <div class="invalid-feedback">Please provide a height between 100 and 250 centimeters.</div>
             </div>
             <div class="form-group">
@@ -44,7 +43,7 @@
                     <h3 id="result">0mg</h3>
                 </div>
                 <div class="col-md">
-                    <legend class="col-form-label">Hourly Rate:</legend>
+                    <legend class="col-form-label">Next Dosage Due:</legend>
                     <h3 id="hourlyRate">0hrs</h3>
                 </div>
                 <div class="col-md">

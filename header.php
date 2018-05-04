@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
-    <link href="css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <title>Gentamicin App</title>
 </head>
@@ -31,12 +31,13 @@
             </li>
         </ul>
 <?php
+// sets the timezone to uk time
 date_default_timezone_set("Europe/London"); // sets the timezone to uk time
 
 require "lib/Session.php";
 $Session = new Session();
 
-if ($Session->getLoggedIn()) {
+if ($Session->getLoggedIn()) { // if user is logged in display logout button and searchbar, otherwise just login button
     echo '<form class="form-inline my-lg-0 mr-2" method="get" action="patient.php">
             <div class="input-group">
                 <input type="number" id="chi" class="form-control" name="chi" placeholder="Search by #CHI" required>

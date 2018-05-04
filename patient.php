@@ -7,6 +7,7 @@ $Database = new Database(); // create an instance of database
 
 $patientID = htmlspecialchars($_GET["chi"]);
 
+// queries patient data from the database
 $patientData = $Database->select("SELECT *
 FROM patientinfo
 WHERE patientID = ?",
@@ -16,7 +17,7 @@ WHERE patientID = ?",
     <div class="container">
         <h1>Gentamicin Dose Administration</h1>
 <?php
-if (!$patientData) {
+if (!$patientData) { // display an error message if query was not successful
     echo '<div class="alert alert-danger" role="alert">
               Patient with CHI number #' . $patientID . ' does not exist.
             </div>';
@@ -56,14 +57,16 @@ echo "          <td>" . $patientData["patientID"] . "</td>
 
         <br>
 
-        <h3>Serum Gentamicin Levels</h3>
+        <h3>Serum Creatinine Levels</h3>
 <?php
+// selects all blood records for a patients
 $bloodResults = $Database->selectMany("SELECT *
 FROM bloods
 WHERE patientID = ?
 ORDER BY patientBloodResultNumber",
     array("i", $patientID));
 
+// if query was not successful display a message to input blood test results
 if (mysqli_num_rows($bloodResults) == 0) {
     echo '<div class="alert alert-info" role="alert">
               Input blood test results to calculate the gentamicin dosage.
@@ -80,13 +83,12 @@ if (mysqli_num_rows($bloodResults) == 0) {
                 <th scope="col">Results Number</th>
                 <th scope="col">Blood Taken On</th>
                 <th scope="col">Results (mg/l)</th>
-<!--                <th scope="col">Gentamicin Dosage</th>-->
-                <th></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
 <?php
+// display the blood test results on the screen
 while ($row = $bloodResults->fetch_assoc()) {
     $bloodTestDate = new DateTime($row["patientBloodTakenDate"]);
     $bloodTestDate = $bloodTestDate->format('d/m/Y');
@@ -95,15 +97,10 @@ while ($row = $bloodResults->fetch_assoc()) {
                 <td>' . $row["patientBloodResultNumber"] . '</td>
                 <td>' . $row["patientBloodTakenDate"] . '</td>
                 <td>' . $row["patientPlasmaCreatinine"] . '</td>
-                
-                <td><form method="post" action="prescription.php">
-                    <button type="submit" class="btn btn-primary btn-sm" name="patientCHI" value="' . $patientID . '">Print Prescription</button>
-                </form></td>
                 <td><button type="button" class="btn btn-primary btn-sm" data-date="' . $bloodTestDate . '" data-number="' . $row["patientBloodResultNumber"] . '" data-plasma="' . $row["patientPlasmaCreatinine"] . '" data-toggle="modal" data-chi="" data-target="#editBloodTestResultsModal">Edit</button></td>
                 </tr>';
 }
 ?>
-<!--                <td>200mg</td>-->
             </tr>
             </tbody>
         </table>
@@ -122,6 +119,7 @@ if ($Session->getStaffRole() != "Doctor") {
         <br>
 
 <?php
+// selects dosage due
 $dosagesDue = $Database->select("SELECT *
 FROM dosagesdue
 WHERE patientID = ?",
@@ -129,6 +127,7 @@ WHERE patientID = ?",
 
 $isPatientNotTreated = !is_null($dosagesDue["patientDosage"]);
 
+// display dosage due if it exists
 if ($isPatientNotTreated) {
     echo '        <br>
         <h3>Next Dosage</h3>
@@ -141,6 +140,7 @@ if ($isPatientNotTreated) {
                 <th scope="col">Date Due</th>
                 <th scope="col">Gentamicin Dosage</th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -149,14 +149,16 @@ if ($isPatientNotTreated) {
     $dosageDueDate = new DateTime($dosagesDue["patientDosageDue"]);
     $currentDate = new DateTime("now");
 
-    $formattedDosageDueDate = $dosageDueDate->format('Y-m-d H:i:s');
+    $formattedDosageDueDate = $dosageDueDate->format('D, d M Y H:i:s O'); // this date format is required for the counter to work in IE
     $formattedDateDue = $dosageDueDate->format('d/m/Y H:i:s');
 
     echo '  <td><p id="dosageDueCounter"></p></td>
         <td>' . $formattedDateDue . '</td>
         <td>' . $dosagesDue["patientDosage"] . 'mg</td>
         <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-chi="' . $patientID . '" data-target="#dosageGivenModal">Dosage Given</button></td>
-
+        <td><form method="post" action="prescription.php">
+            <button type="submit" class="btn btn-primary btn-sm" name="patientCHI" value="' . $patientID . '">Print Prescription</button>
+        </form></td>
             </tr>
             </tbody>
         </table>';
@@ -166,6 +168,7 @@ if ($isPatientNotTreated) {
 
         <h3>Previous Gentamicin Dosages</h3>
 <?php
+// displays all previous dosages on the screen
 $previousDosages = $Database->selectMany("SELECT recordDosageGivenDate, recordDosageDue, recordDosageGivenAmount, recordDosageGivenBy, recordDoseGivenWard, staffTitle, staffID, staffTitle, staffFirstName, staffLastName
 FROM records
 LEFT JOIN staff ON recordDosageGivenBy = staffID
@@ -203,27 +206,26 @@ if (mysqli_num_rows($previousDosages) > 0) {
     }
     echo '            </tbody>
         </table>';
-} else {
+} else { // display a message when there are no dosages due
     echo '<div class="alert alert-info" role="alert">
               Currently there are no previous dosages.
             </div>';
 }
 
+// display the stop gentamicin treatment button when patient is treated
 if ($isPatientNotTreated) {
     echo '        <br>
         
         <h3>Stop Gentamicin Treatment</h3>
         <p>Remove all scheduled gentamicin dosages for this patient.</p>
-        <form method="post" action="stoptreatment.php">
-            <button type="submit" class="btn btn-primary" data-toggle="modal" name="patientCHI" value="' . $patientID . '">Stop Gentamicin Treatment</button>
-        </form>';
+        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#stopTreatmentModal">Stop Gentamicin Treatment</button></td>';
 }
 ?>
 
         <script src="js/formChecker.js"></script>
         <script src="js/timer.js"></script>
         <script>
-            var countDownDate = new Date("<?php echo $formattedDosageDueDate; ?>").getTime();
+            var countDownDate = new Date("<?php echo $formattedDosageDueDate ?>").getTime();
             timer(countDownDate, "dosageDueCounter");
         </script>
 
@@ -232,6 +234,8 @@ if ($isPatientNotTreated) {
         <?php require "editbloodtestmodal.php"; ?>
 
         <?php require "bloodtestmodal.php"; ?>
+
+        <?php require "stoptreatmentmodal.php"; ?>
 
     </div>
 

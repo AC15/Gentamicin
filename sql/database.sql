@@ -4,9 +4,6 @@
 *Aiden MacLeod - Inverness College UHI
 */
 
-# added staffPassword
-# added result number to blood
-
 /*
 *run first
 *delete tables of same name to create new tables
@@ -40,10 +37,6 @@ CREATE TABLE bloods (
   patientBloodResultNumber VARCHAR(10),
   patientID int(5),
   patientBloodTakenDate DATE,
-#   patientBloodTakenBy int(3),
-#   patientBloodRecievedBy int(5),
-#   patientBloodResultsEnteredBy int(5),
-#   patientBloodResultsEnteredDate DATE,
   patientPlasmaCreatinine DOUBLE(4,1),
   PRIMARY KEY (patientBloodResultNumber)
 );
@@ -53,14 +46,10 @@ CREATE TABLE bloods (
 */
 CREATE TABLE dosagesdue (
   patientID int(5),
-#   patientDosageGivenDate DATE,
   patientDosageDue DATETIME,
   patientDosageHourlyRate int(3),
   patientDosage int(3),
-#   patientDosageGivenBy int(5),
-#   patientDoseGivenWard VARCHAR(10),
-#   prescriptionID varchar(10),
-  PRIMARY KEY (patientID)#,patientDosageGivenDate)
+  PRIMARY KEY (patientID)
 );
 
 /*
@@ -80,27 +69,21 @@ CREATE TABLE staff (
 *Table: Records Table
 */
 CREATE TABLE records (
-#   recordID int(5),
   patientID int(5),
   recordDosageGivenDate DATETIME,
   recordDosageDue DATETIME,
   recordDosageGivenAmount int(3),
   recordDosageGivenBy int(5),
   recordDoseGivenWard VARCHAR(10),
-#   recordPrescriptionID VARCHAR(10),
   PRIMARY KEY (patientID,recordDosageGivenDate)
 );
 
 /* Sample data */
-INSERT INTO patientinfo VALUES ('12345','John','Doe','190','1956-02-01','156','Ward 1','M');
-INSERT INTO patientinfo VALUES ('32641','Jane','Doe','140','1943-04-09','147','Ward 2','F');
-INSERT INTO patientinfo VALUES ('95632','Henry','Hippo','148','1932-05-04','132','Ward 1','M');
-INSERT INTO patientinfo VALUES ('25845','Harry','Happy','80','1951-12-12','110','Ward','M');
-
-# INSERT INTO bloods VALUES ('12345','2018-01-01','123','421','421','2018-01-03','21.1');
-# INSERT INTO bloods VALUES ('95632','2018-04-06','123','421','421','2018-04-08','14.2');
-# INSERT INTO bloods VALUES ('25845','2018-03-02','321','421','421','2018-03-05','36.3');
+INSERT INTO patientinfo VALUES ('12345','John','Doe','190','1956-02-01','156','1','M');
+INSERT INTO patientinfo VALUES ('32641','Jane','Doe','140','1974-04-09','147','2','F');
+INSERT INTO patientinfo VALUES ('95632','Henry','Hippo','148','1989-05-04','132','1','M');
+INSERT INTO patientinfo VALUES ('25845','Harry','Happy','80','1951-12-12','110','4','M');
 
 INSERT INTO staff VALUES ('123','Dr','Bill','Lee','Doctor','test');
-INSERT INTO staff VALUES ('321','Dr','Bob','Bing','Doctor','test');
-INSERT INTO staff VALUES ('421','Dr','Bonnie','Lass','Lab','test');
+INSERT INTO staff VALUES ('124','Dr','Bob','Bing','Doctor','test');
+INSERT INTO staff VALUES ('321','Dr','Bonnie','Lass','Lab','test');

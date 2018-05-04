@@ -6,3 +6,7 @@ body {
 p {
     word-wrap: break-word; /* Wraps links so they don't take up the whole space */
 }
+
+a:not([href]):not([tabindex]) { /* Changes the color of link buttons to white */
+    color: #fff;
+}

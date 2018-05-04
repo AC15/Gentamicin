@@ -5,12 +5,13 @@ $ward = $_POST["ward"];
 $person = $_POST["person"];
 $patientCHI = $_POST["patientCHI"];
 
+date_default_timezone_set("Europe/London"); // sets the timezone to uk time
 $date = DateTime::createFromFormat("d/m/Y", $date);
 $date = $date->format("Y-m-d");
 $datetime = $date . " " . $time . ":00";
 
 // Displays an error when a date from the future is inputted
-if (new DateTime("today") < new DateTime($date)) {
+if (new DateTime("now") < new DateTime($datetime)) {
     $message = "You cannot input a date from the future.";
     $type = "danger";
     require "message.php";
@@ -36,4 +37,5 @@ SET patientDosageDue = ?
 WHERE patientID = ?",
     array("si", $dosageDueDate, $patientCHI));
 
+// redirects user to the previous page
 header('Location: ' . $_SERVER['HTTP_REFERER']);

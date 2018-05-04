@@ -8,6 +8,13 @@ class Database {
         $this->DB = $DB;
     }
 
+    /**
+     * Inserts a query into the database
+     *
+     * @param $Query
+     * @param $param
+     * @return bool
+     */
     function insert($Query, $param) {
         $Stmt = $this->DB->prepare($Query);
         $this->prepareArray($param, $Stmt); // now we need to add references
@@ -15,6 +22,13 @@ class Database {
         return $Stmt and $Stmt->execute() and $Stmt->affected_rows <= 1;
     }
 
+    /**
+     * Fetches one row from the database
+     *
+     * @param $Query
+     * @param $param
+     * @return null
+     */
     function select($Query, $param) {
         if ($Stmt = $this->DB->prepare($Query)) { // If the query is in the correct format
             $Result = $this->getResult($param, $Stmt);
@@ -27,6 +41,13 @@ class Database {
         return null;
     }
 
+    /**
+     * Fetches many rows from the database
+     *
+     * @param $Query
+     * @param $param
+     * @return mixed|null
+     */
     function selectMany($Query, $param) {
         if ($Stmt = $this->DB->prepare($Query)) { // If the query is in the correct format
             $Result = $this->getResult($param, $Stmt);
@@ -38,6 +59,13 @@ class Database {
         return null;
     }
 
+    /**
+     * Gets the result of a query
+     *
+     * @param $param
+     * @param $Stmt
+     * @return mixed
+     */
     public function getResult($param, $Stmt) {
         if (!is_null($param)) { // where there are no parameters return
             $this->prepareArray($param, $Stmt);
@@ -47,6 +75,12 @@ class Database {
         return $Stmt->get_result();
     }
 
+    /**
+     * Prepares the query before it's being executed
+     *
+     * @param $param
+     * @param $Stmt
+     */
     public function prepareArray($param, $Stmt) {
         $tmp = array();
         foreach ($param as $key => $value) $tmp[$key] = &$param[$key];

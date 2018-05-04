@@ -1,3 +1,5 @@
+<!-- This page displays a form to enter blood test results -->
+
 <div class="modal fade" id="bloodTestResultsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -20,9 +22,9 @@
                         <div class="invalid-feedback">Please provide a result number.</div>
                     </div>
                     <div class="form-group">
-                        <label for="plasmaCreatinine">Plasma Creatinine Level</label>
-                        <input type="number" class="form-control"  min="20" id="plasmaCreatinine" name="plasmaCreatinine" placeholder="Plasma Creatinine Level" required>
-                        <div class="invalid-feedback">Please provide a plasma creatinine level.</div>
+                        <label for="plasmaCreatinine">Serum Gentamicin Level</label>
+                        <input type="number" class="form-control"  min="20" id="plasmaCreatinine" name="plasmaCreatinine" placeholder="Serum Gentamicin Level" required>
+                        <div class="invalid-feedback">Please provide a serum gentamicin level.</div>
                     </div>
                     <input type="hidden" id="patientCHI" name="patientCHI" value="<?php echo $patientID ?>"/>
                 </div>

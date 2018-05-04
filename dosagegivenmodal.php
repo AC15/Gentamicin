@@ -1,9 +1,11 @@
+<!-- This page displays a form to enter the gentamicin dosage -->
+
 <div class="modal fade" id="dosageGivenModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form method="post" action="dosagegiven.php" id="needs-validation" novalidate>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dosageGivenModalTitle"></h5>
+                    <h5 class="modal-title" id="dosageGivenModalTitle">Dosage Given</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -16,7 +18,7 @@
                     </div>
                     <div class="form-group">
                         <label for="time">Time</label>
-                        <input type="text" class="form-control" id="time" name="time" pattern="^([0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="Time (00:00)" required>
+                        <input type="text" class="form-control" id="time" name="time" pattern="^([0-9]|0[0-9]|1?[0-9]|2[0-3]):[0-5]?[0-9]$" placeholder="Time (00:00)" required>
                         <div class="invalid-feedback">Please provide a time.</div>
                     </div>
                     <div class="form-group">
@@ -35,6 +37,7 @@
                         <select class="form-control" id="person" name="person" required>
                             <option selected disabled hidden value="">Choose...</option>
 <?php
+// gets a list of all the doctors
 $doctors = $Database->selectMany("SELECT staffID, staffTitle, staffFirstName, staffLastName
 FROM staff
 WHERE staffRole = 'Doctor'",

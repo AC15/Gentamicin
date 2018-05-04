@@ -1,3 +1,5 @@
+<!-- This page displays a form to edit blood test results -->
+
 <div class="modal fade" id="editBloodTestResultsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -20,11 +22,12 @@
                         <div class="invalid-feedback">Please provide a result number.</div>
                     </div>
                     <div class="form-group">
-                        <label for="editPlasmaCreatinine">Plasma Creatinine Level</label>
-                        <input type="number" class="form-control" min="20" id="editPlasmaCreatinine" name="plasmaCreatinine" placeholder="Plasma Creatinine Level" required>
-                        <div class="invalid-feedback">Please provide a plasma creatinine level.</div>
+                        <label for="editPlasmaCreatinine">Serum Gentamicin Level</label>
+                        <input type="number" class="form-control" min="20" id="editPlasmaCreatinine" name="plasmaCreatinine" placeholder="Serum Gentamicin Level" required>
+                        <div class="invalid-feedback">Please provide a serum gentamicin level.</div>
                     </div>
                     <input type="hidden" id="patientCHI" name="patientCHI" value="<?php echo $patientID ?>"/>
+                    <input type="hidden" id="oldResultsNumber" name="oldResultsNumber" value=""/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -45,6 +48,7 @@
 
             var number = button.data('number');
             $("#editResultsNumber").val(number);
+            $("#oldResultsNumber").val(number);
 
             var plasma = button.data('plasma');
             $("#editPlasmaCreatinine").val(plasma);

@@ -4,16 +4,17 @@ $Database = new Database(); // create an instance of database
 
 require "lib/Session.php";
 $Session = new Session();
-
 $patientCHI = $_POST["patientCHI"];
 $staffID = $Session->getStaffID();
 
+// seelects patient and dosage due information
 $patient = $Database->select("SELECT patientinfo.patientID, patientDOB, patientFirstName, patientLastName, patientDosageDue, patientDosage
 FROM dosagesdue
 LEFT JOIN patientinfo ON patientinfo.patientID = dosagesdue.patientID
 WHERE patientinfo.patientID = ?",
     array("i", $patientCHI));
 
+// selects staff details
 $staff = $Database->select("SELECT CONCAT(staffTitle, '. ', staffFirstName, ' ', staffLastName) AS staffName
 FROM staff
 WHERE staffID = ?",
@@ -80,6 +81,6 @@ $dob = date("d/m/Y", strtotime($patient["patientDOB"])); // formats date from y-
 </table>
 
 <script>
-    window.print();
+    window.print(); // prints the prescription
     setTimeout(window.close, 0); // this will close the page when user clicks on cancel (edge does not work)
 </script>

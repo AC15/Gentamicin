@@ -1,3 +1,9 @@
+/**
+ * Displays a countdown timer for selected date
+ *
+ * @param date
+ * @param id
+ */
 function timer(date, id) {
 // Update the count down every 1 second
     var x = setInterval(function() {
@@ -25,6 +31,12 @@ function timer(date, id) {
         }
     }, 1000);
 
+    /**
+     * Formats the time by adding leading zeros
+     *
+     * @param size
+     * @returns {string}
+     */
     Number.prototype.pad = function(size) {
         var s = String(this);
         while (s.length < (size || 2)) {s = "0" + s;}
